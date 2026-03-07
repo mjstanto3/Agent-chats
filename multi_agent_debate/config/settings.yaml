@@ -1,0 +1,25 @@
+# Global settings for the Multi-Agent Debate Framework
+
+debate:
+  # Maximum number of rounds before the debate is force-stopped
+  max_rounds: 10
+
+  # LLM backend: "openai" for live calls, "mock" for offline/testing
+  backend: openai
+
+  # Directory where transcripts and the final answer are saved
+  output_dir: outputs
+
+llm:
+  # Default model for agents when not specified per-agent
+  default_model: gpt-4o
+
+  # Default model for the moderator
+  moderator_model: gpt-4o
+
+  # Default model for the synthesizer
+  synthesizer_model: gpt-4o
+
+logging:
+  level: INFO
+  format: "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
