@@ -1,0 +1,33 @@
+# Agent configuration for the Multi-Agent Debate Framework
+# Each entry defines one debate participant.
+# Fields:
+#   name        - display name used in the transcript
+#   role        - functional role (proponent | critic | researcher | analyst | synthesizer)
+#   model       - LLM model identifier (default: gpt-4o)
+#   temperature - sampling temperature (default: 0.7)
+
+agents:
+  - name: Proponent
+    role: proponent
+    model: gpt-4o
+    temperature: 0.7
+
+  - name: Critic
+    role: critic
+    model: gpt-4o
+    temperature: 0.7
+
+  - name: Researcher
+    role: researcher
+    model: gpt-4o
+    temperature: 0.5
+
+  - name: Analyst
+    role: analyst
+    model: gpt-4o
+    temperature: 0.5
+
+  - name: Synthesizer
+    role: synthesizer
+    model: gpt-4o
+    temperature: 0.4
