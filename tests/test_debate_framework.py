@@ -3,15 +3,11 @@
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 
 import pytest
 
-# Ensure the repo root is on sys.path when running tests directly
 ROOT = Path(__file__).resolve().parent.parent
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
 
 from multi_agent_debate.agents.agent_factory import create_agent, load_agents_from_config
 from multi_agent_debate.agents.base_agent import Agent
@@ -436,10 +432,12 @@ class TestDebateOrchestrator:
             len(state.claims) + len(state.objections) +
             len(state.open_questions) + len(state.consensus_points)
         )
-        assert total_items >= 0  # May be 0 if only synthesizer ran
+        assert total_items > 0
 
-    def test_unknown_agent_does_not_crash(self, tmp_path, sample_topic):
+    def test_unknown_agent_does_not_crash(self, tmp_path, sample_topic, monkeypatch):
         """Orchestrator should stop gracefully if moderator names an unknown agent."""
+        from multi_agent_debate.moderator.moderator_agent import ModeratorDecision
+
         agents = [create_agent("Alice", "proponent", backend="mock")]
         orchestrator = DebateOrchestrator(
             topic=sample_topic,
@@ -448,5 +446,23 @@ class TestDebateOrchestrator:
             output_dir=tmp_path,
             backend="mock",
         )
-        orchestrator.run()
-        # Should complete without raising
+
+        # Force the moderator to always return an unknown agent name
+        monkeypatch.setattr(
+            orchestrator.moderator,
+            "decide",
+            lambda conv, state: ModeratorDecision(
+                next_agent="nonexistent_agent_xyz",
+                goal="test goal",
+                end_debate=False,
+            ),
+        )
+
+        # Should exit gracefully (moderator picks unknown agent → loop breaks immediately)
+        final_answer = orchestrator.run()
+        assert isinstance(final_answer, str)
+        # No agent ever produced a message – the loop broke before add_message was called
+        assert len(orchestrator.conversation.messages) == 0
+        # Blackboard should remain in its initial empty state
+        assert orchestrator.debate_state.claims == []
+        assert orchestrator.debate_state.objections == []

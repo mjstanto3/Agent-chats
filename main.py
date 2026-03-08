@@ -59,20 +59,20 @@ def main(argv: list[str] | None = None) -> None:
     )
     parser.add_argument(
         "--backend",
-        default="mock",
+        default=None,
         choices=["mock", "openai"],
-        help="LLM backend: 'mock' for offline testing, 'openai' for live calls",
+        help="LLM backend: 'mock' for offline testing, 'openai' for live calls (default: from settings.yaml or 'mock')",
     )
     parser.add_argument(
         "--rounds",
         type=int,
-        default=6,
-        help="Maximum number of debate rounds",
+        default=None,
+        help="Maximum number of debate rounds (default: from settings.yaml or 6)",
     )
     parser.add_argument(
         "--output-dir",
-        default="outputs",
-        help="Directory for transcript artefacts",
+        default=None,
+        help="Directory for transcript artefacts (default: from settings.yaml or 'outputs')",
     )
     parser.add_argument(
         "--config",
