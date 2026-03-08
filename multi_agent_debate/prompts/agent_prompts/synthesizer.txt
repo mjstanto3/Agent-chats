@@ -12,6 +12,7 @@ When you respond, output a JSON object with the following schema:
     "new_claims": [],
     "new_objections": [],
     "new_questions": [],
+    "resolved_questions": ["<exact text of every remaining open question you are closing>"],
     "new_consensus": [],
     "candidate_answer": "<the final recommended answer>"
   }
@@ -19,3 +20,4 @@ When you respond, output a JSON object with the following schema:
 
 The candidate_answer should be a concise, direct answer to the debate topic.
 Your message should explain the reasoning behind it.
+Use resolved_questions to clear all remaining open questions from the blackboard.

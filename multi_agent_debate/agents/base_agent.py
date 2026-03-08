@@ -21,6 +21,7 @@ def _call_openai(
     temperature: float,
     system_prompt: str,
     user_prompt: str,
+    max_tokens: int = 512,
 ) -> str:
     """Call OpenAI chat completion and return the text content."""
     try:
@@ -35,6 +36,7 @@ def _call_openai(
     response = client.chat.completions.create(
         model=model,
         temperature=temperature,
+        max_tokens=max_tokens,
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},
@@ -119,6 +121,7 @@ class Agent:
         model: str = "gpt-4o",
         temperature: float = 0.7,
         backend: str = "openai",
+        max_tokens: int = 512,
     ) -> None:
         self.name = name
         self.role = role
@@ -126,6 +129,7 @@ class Agent:
         self.model = model
         self.temperature = temperature
         self.backend = backend
+        self.max_tokens = max_tokens
 
     # ------------------------------------------------------------------
     # Internal LLM call
@@ -135,7 +139,7 @@ class Agent:
         """Dispatch to the configured backend and return raw text."""
         if self.backend == "mock":
             return _call_mock(self.system_prompt, user_prompt, self.role)
-        return _call_openai(self.model, self.temperature, self.system_prompt, user_prompt)
+        return _call_openai(self.model, self.temperature, self.system_prompt, user_prompt, self.max_tokens)
 
     def _parse_response(self, raw: str) -> Dict[str, Any]:
         """
@@ -207,7 +211,7 @@ class Agent:
             "Please open the debate with your initial argument.\n"
             "Respond in JSON with the schema:\n"
             '{"message": "...", "state_update": {"new_claims": [], '
-            '"new_objections": [], "new_questions": []}}'
+            '"new_objections": [], "new_questions": [], "resolved_questions": []}}'
         )
         raw = self._llm(prompt)
         parsed = self._parse_response(raw)
@@ -235,7 +239,7 @@ class Agent:
             f"Please critique the following claim:\n\n{claim}\n\n"
             "Respond in JSON with the schema:\n"
             '{"message": "...", "state_update": {"new_claims": [], '
-            '"new_objections": [], "new_questions": []}}'
+            '"new_objections": [], "new_questions": [], "resolved_questions": []}}'
         )
         raw = self._llm(prompt)
         parsed = self._parse_response(raw)
@@ -269,7 +273,7 @@ class Agent:
             f"Current blackboard state:\n{debate_state.summary()}\n\n"
             "Respond in JSON with the schema:\n"
             '{"message": "...", "state_update": {"new_claims": [], '
-            '"new_objections": [], "new_questions": []}}'
+            '"new_objections": [], "new_questions": [], "resolved_questions": []}}'
         )
         raw = self._llm(prompt)
         parsed = self._parse_response(raw)
@@ -315,7 +319,7 @@ class Agent:
             "Please contribute your next message to the debate.\n"
             "Respond in JSON with the schema:\n"
             '{"message": "...", "state_update": {"new_claims": [], '
-            '"new_objections": [], "new_questions": [], '
+            '"new_objections": [], "new_questions": [], "resolved_questions": [], '
             '"new_consensus": [], "candidate_answer": ""}}'
         )
 

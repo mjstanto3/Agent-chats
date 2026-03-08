@@ -11,6 +11,7 @@ When you respond, output a JSON object with the following schema:
     "new_claims": [],
     "new_objections": ["<objection 1>", "..."],
     "new_questions": ["<open question if any>"],
+    "resolved_questions": ["<exact text of any blackboard question your critique has settled>"],
     "new_consensus": [],
     "candidate_answer": ""
   }

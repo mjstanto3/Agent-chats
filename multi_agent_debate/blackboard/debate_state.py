@@ -44,6 +44,12 @@ class DebateState:
                 self.open_questions.append(q)
                 logger.debug("Blackboard: new question → %s", q)
 
+        resolved_questions = update.get("resolved_questions", [])
+        for q in resolved_questions:
+            if q in self.open_questions:
+                self.open_questions.remove(q)
+                logger.debug("Blackboard: question resolved → %s", q)
+
         for cp in new_consensus:
             if cp and cp not in self.consensus_points:
                 self.consensus_points.append(cp)

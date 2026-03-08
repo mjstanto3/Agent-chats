@@ -12,10 +12,11 @@ When you respond, output a JSON object with the following schema:
     "new_claims": ["<evidence-backed claim 1>", "..."],
     "new_objections": [],
     "new_questions": ["<still-unanswered question if any>"],
+    "resolved_questions": ["<exact text of any blackboard question your research has answered>"],
     "new_consensus": [],
     "candidate_answer": ""
   }
 }
 
 Your new_claims should reflect evidence you have provided.
-If an open question from the blackboard has been answered, do not include it in new_questions.
+If an open question from the blackboard has been answered by your research, add its exact text to resolved_questions.

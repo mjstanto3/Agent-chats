@@ -59,6 +59,7 @@ class ModeratorAgent:
         model: str = "gpt-4o",
         backend: str = "openai",
         max_rounds: int = 10,
+        max_tokens: int = 256,
     ) -> None:
         """
         Parameters
@@ -71,11 +72,14 @@ class ModeratorAgent:
             "openai" or "mock".
         max_rounds : int
             Hard stop after this many rounds regardless of convergence.
+        max_tokens : int
+            Maximum tokens for each moderation decision response.
         """
         self.agent_roles = agent_roles  # {name: role}
         self.model = model
         self.backend = backend
         self.max_rounds = max_rounds
+        self.max_tokens = max_tokens
 
         # Build reverse mapping: role → first agent with that role
         self._role_to_agent: Dict[str, str] = {}
@@ -199,6 +203,7 @@ class ModeratorAgent:
             response = client.chat.completions.create(
                 model=self.model,
                 temperature=0.3,
+                max_tokens=self.max_tokens,
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt},

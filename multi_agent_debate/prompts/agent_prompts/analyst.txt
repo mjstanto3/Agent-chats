@@ -11,11 +11,12 @@ When you respond, output a JSON object with the following schema:
     "new_claims": [],
     "new_objections": [],
     "new_questions": ["<unresolved question if any>"],
+    "resolved_questions": ["<exact text of any blackboard question your analysis has answered>"],
     "new_consensus": ["<consensus point 1>", "..."],
     "candidate_answer": ""
   }
 }
 
 Focus on new_consensus points where the debate has converged.
-Use new_questions for genuine remaining disagreements.
+Use new_questions for genuine remaining disagreements, and resolved_questions for questions your analysis has settled.
 Only propose a candidate_answer if clear consensus has emerged.

@@ -20,6 +20,12 @@ llm:
   # Default model for the synthesizer
   synthesizer_model: gpt-4o
 
+  # Maximum tokens per agent response (caps token usage per turn)
+  max_tokens: 512
+
+  # Maximum tokens for the moderator's routing decision (smaller JSON output)
+  moderator_max_tokens: 256
+
 logging:
   level: INFO
   format: "%(asctime)s [%(levelname)s] %(name)s: %(message)s"

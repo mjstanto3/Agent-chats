@@ -11,10 +11,12 @@ When you respond, output a JSON object with the following schema:
     "new_claims": ["<claim 1>", "..."],
     "new_objections": [],
     "new_questions": ["<open question if any>"],
+    "resolved_questions": ["<exact text of any blackboard question you have answered>"],
     "new_consensus": [],
     "candidate_answer": ""
   }
 }
 
 Focus your new_claims on the most important points you are making this turn.
+Use resolved_questions to remove questions from the blackboard that your argument has answered.
 Only include a candidate_answer if you believe the debate has reached a strong conclusion.
