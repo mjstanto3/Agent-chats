@@ -40,7 +40,13 @@ def _call_openai(
             {"role": "user", "content": user_prompt},
         ],
     )
-    return response.choices[0].message.content
+    content = response.choices[0].message.content
+    if content is None:
+        logger.warning(
+            "OpenAI response message.content was None; returning empty string instead."
+        )
+        return ""
+    return content
 
 
 def _call_mock(system_prompt: str, user_prompt: str, role: str) -> str:
