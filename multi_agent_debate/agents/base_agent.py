@@ -180,6 +180,12 @@ class Agent:
 
         message_text = parsed.get("message", "")
         state_update = parsed.get("state_update", {})
+        if not isinstance(state_update, dict):
+            logger.warning(
+                "Expected dict for state_update, got %s; discarding.",
+                type(state_update).__name__,
+            )
+            state_update = {}
 
         msg = Message(
             content=message_text,
@@ -205,11 +211,18 @@ class Agent:
         )
         raw = self._llm(prompt)
         parsed = self._parse_response(raw)
+        state_update = parsed.get("state_update", {})
+        if not isinstance(state_update, dict):
+            logger.warning(
+                "Expected dict for state_update, got %s; discarding.",
+                type(state_update).__name__,
+            )
+            state_update = {}
         return Message(
             content=parsed.get("message", ""),
             agent=self.name,
             round=1,
-            state_update=parsed.get("state_update", {}),
+            state_update=state_update,
         )
 
     def critique_argument(self, claim: str) -> Message:
@@ -226,11 +239,18 @@ class Agent:
         )
         raw = self._llm(prompt)
         parsed = self._parse_response(raw)
+        state_update = parsed.get("state_update", {})
+        if not isinstance(state_update, dict):
+            logger.warning(
+                "Expected dict for state_update, got %s; discarding.",
+                type(state_update).__name__,
+            )
+            state_update = {}
         return Message(
             content=parsed.get("message", ""),
             agent=self.name,
             round=0,
-            state_update=parsed.get("state_update", {}),
+            state_update=state_update,
         )
 
     def respond_to_message(
@@ -253,12 +273,19 @@ class Agent:
         )
         raw = self._llm(prompt)
         parsed = self._parse_response(raw)
+        state_update = parsed.get("state_update", {})
+        if not isinstance(state_update, dict):
+            logger.warning(
+                "Expected dict for state_update, got %s; discarding.",
+                type(state_update).__name__,
+            )
+            state_update = {}
         return Message(
             content=parsed.get("message", ""),
             agent=self.name,
             round=conversation.round,
             reply_to=target_message.id,
-            state_update=parsed.get("state_update", {}),
+            state_update=state_update,
         )
 
     # ------------------------------------------------------------------
